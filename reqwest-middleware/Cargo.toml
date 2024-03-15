@@ -15,12 +15,26 @@ anyhow = "1.0.0"
 async-trait = "0.1.51"
 http = "0.2.0"
 reqwest = { version = "0.11.4", default-features = false, features = ["json", "multipart"] }
+boring_reqwest = { package = "reqwest", git = "https://github.com/AceRogue/reqwest.git", default-features = false, features = [
+    "json",
+    "cookie_store",
+    "cookies",
+    "multipart",
+    "__impersonate",
+] }
 serde = "1.0.106"
 task-local-extensions = "0.1.4"
 thiserror = "1.0.21"
 
 [dev-dependencies]
 reqwest = "0.11.4"
+boring_reqwest = { package = "reqwest", git = "https://github.com/AceRogue/reqwest.git", default-features = false, features = [
+    "json",
+    "cookie_store",
+    "cookies",
+    "multipart",
+    "__impersonate",
+] }
 reqwest-retry = { path = "../reqwest-retry" }
 reqwest-tracing = { path = "../reqwest-tracing" }
 tokio = { version = "1.0.0", features = ["macros", "rt-multi-thread"] }

@@ -1,4 +1,4 @@
-use reqwest::{Client, Request, Response};
+use boring_reqwest::{Client, Request, Response};
 use std::sync::Arc;
 use task_local_extensions::Extensions;
 
@@ -32,7 +32,7 @@ use crate::error::{Error, Result};
 /// [`ClientWithMiddleware`]: crate::ClientWithMiddleware
 /// [`with`]: crate::ClientBuilder::with
 #[cfg_attr(not(target_arch = "wasm32"), async_trait::async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait::async_trait(?Send))]
+#[cfg_attr(target_arch = "wasm32", async_trait::async_trait(? Send))]
 pub trait Middleware: 'static + Send + Sync {
     /// Invoked with a request before sending it. If you want to continue processing the request,
     /// you should explicitly call `next.run(req, extensions)`.
@@ -48,10 +48,10 @@ pub trait Middleware: 'static + Send + Sync {
 }
 
 #[cfg_attr(not(target_arch = "wasm32"), async_trait::async_trait)]
-#[cfg_attr(target_arch = "wasm32", async_trait::async_trait(?Send))]
+#[cfg_attr(target_arch = "wasm32", async_trait::async_trait(? Send))]
 impl<F> Middleware for F
-where
-    F: Send
+    where
+        F: Send
         + Sync
         + 'static
         + for<'a> Fn(Request, &'a mut Extensions, Next<'a>) -> BoxFuture<'a, Result<Response>>,
@@ -78,9 +78,9 @@ pub struct Next<'a> {
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-pub type BoxFuture<'a, T> = std::pin::Pin<Box<dyn std::future::Future<Output = T> + Send + 'a>>;
+pub type BoxFuture<'a, T> = std::pin::Pin<Box<dyn std::future::Future<Output=T> + Send + 'a>>;
 #[cfg(target_arch = "wasm32")]
-pub type BoxFuture<'a, T> = std::pin::Pin<Box<dyn std::future::Future<Output = T> + 'a>>;
+pub type BoxFuture<'a, T> = std::pin::Pin<Box<dyn std::future::Future<Output=T> + 'a>>;
 
 impl<'a> Next<'a> {
     pub(crate) fn new(client: &'a Client, middlewares: &'a [Arc<dyn Middleware>]) -> Self {

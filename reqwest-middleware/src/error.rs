@@ -10,13 +10,13 @@ pub enum Error {
     Middleware(#[from] anyhow::Error),
     /// Error from the underlying reqwest client
     #[error("Request error: {0}")]
-    Reqwest(#[from] reqwest::Error),
+    Reqwest(#[from] boring_reqwest::Error),
 }
 
 impl Error {
     pub fn middleware<E>(err: E) -> Self
-    where
-        E: 'static + Send + Sync + std::error::Error,
+        where
+            E: 'static + Send + Sync + std::error::Error,
     {
         Error::Middleware(err.into())
     }

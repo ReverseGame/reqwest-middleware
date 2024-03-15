@@ -1,6 +1,6 @@
-use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
-use reqwest::multipart::Form;
-use reqwest::{Body, Client, IntoUrl, Method, Request, Response};
+use boring_reqwest::header::{HeaderMap, HeaderName, HeaderValue};
+use boring_reqwest::multipart::Form;
+use boring_reqwest::{Body, Client, IntoUrl, Method, Request, Response};
 use serde::Serialize;
 use std::convert::TryFrom;
 use std::fmt::{self, Display};
@@ -35,8 +35,8 @@ impl ClientBuilder {
     ///
     /// [`with_arc`]: Self::with_arc
     pub fn with<M>(self, middleware: M) -> Self
-    where
-        M: Middleware,
+        where
+            M: Middleware,
     {
         self.with_arc(Arc::new(middleware))
     }
@@ -55,8 +55,8 @@ impl ClientBuilder {
     ///
     /// [`with_arc_init`]: Self::with_arc_init
     pub fn with_init<I>(self, initialiser: I) -> Self
-    where
-        I: RequestInitialiser,
+        where
+            I: RequestInitialiser,
     {
         self.with_arc_init(Arc::new(initialiser))
     }
@@ -83,7 +83,7 @@ impl ClientBuilder {
 /// request.
 #[derive(Clone)]
 pub struct ClientWithMiddleware {
-    inner: reqwest::Client,
+    inner: boring_reqwest::Client,
     middleware_stack: Box<[Arc<dyn Middleware>]>,
     initialiser_stack: Box<[Arc<dyn RequestInitialiser>]>,
 }
@@ -91,8 +91,8 @@ pub struct ClientWithMiddleware {
 impl ClientWithMiddleware {
     /// See [`ClientBuilder`] for a more ergonomic way to build `ClientWithMiddleware` instances.
     pub fn new<T>(client: Client, middleware_stack: T) -> Self
-    where
-        T: Into<Box<[Arc<dyn Middleware>]>>,
+        where
+            T: Into<Box<[Arc<dyn Middleware>]>>,
     {
         ClientWithMiddleware {
             inner: client,
@@ -184,18 +184,18 @@ impl fmt::Debug for ClientWithMiddleware {
 /// This is a wrapper around [`reqwest::RequestBuilder`] exposing the same API.
 #[must_use = "RequestBuilder does nothing until you 'send' it"]
 pub struct RequestBuilder {
-    inner: reqwest::RequestBuilder,
+    inner: boring_reqwest::RequestBuilder,
     client: ClientWithMiddleware,
     extensions: Extensions,
 }
 
 impl RequestBuilder {
     pub fn header<K, V>(self, key: K, value: V) -> Self
-    where
-        HeaderName: TryFrom<K>,
-        <HeaderName as TryFrom<K>>::Error: Into<http::Error>,
-        HeaderValue: TryFrom<V>,
-        <HeaderValue as TryFrom<V>>::Error: Into<http::Error>,
+        where
+            HeaderName: TryFrom<K>,
+            <HeaderName as TryFrom<K>>::Error: Into<http::Error>,
+            HeaderValue: TryFrom<V>,
+            <HeaderValue as TryFrom<V>>::Error: Into<http::Error>,
     {
         RequestBuilder {
             inner: self.inner.header(key, value),
@@ -219,9 +219,9 @@ impl RequestBuilder {
     }
 
     pub fn basic_auth<U, P>(self, username: U, password: Option<P>) -> Self
-    where
-        U: Display,
-        P: Display,
+        where
+            U: Display,
+            P: Display,
     {
         RequestBuilder {
             inner: self.inner.basic_auth(username, password),
@@ -230,8 +230,8 @@ impl RequestBuilder {
     }
 
     pub fn bearer_auth<T>(self, token: T) -> Self
-    where
-        T: Display,
+        where
+            T: Display,
     {
         RequestBuilder {
             inner: self.inner.bearer_auth(token),
@@ -289,7 +289,7 @@ impl RequestBuilder {
         }
     }
 
-    pub fn build(self) -> reqwest::Result<Request> {
+    pub fn build(self) -> boring_reqwest::Result<Request> {
         self.inner.build()
     }
 
