@@ -21,7 +21,7 @@ boring_reqwest = { package = "reqwest", git = "https://github.com/AceRogue/reqwe
     "cookies",
     "multipart",
     "__impersonate",
-] }
+], branch = "feat/upgrade-version"}
 serde = "1.0.106"
 task-local-extensions = "0.1.4"
 thiserror = "1.0.21"
