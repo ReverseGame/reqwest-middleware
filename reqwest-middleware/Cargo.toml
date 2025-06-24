@@ -34,7 +34,7 @@ boring_reqwest = { package = "reqwest", git = "https://github.com/AceRogue/reqwe
     "cookies",
     "multipart",
     "__impersonate",
-] }
+], branch = "feat/upgrade-version"}
 reqwest-retry = { path = "../reqwest-retry" }
 reqwest-tracing = { path = "../reqwest-tracing" }
 tokio = { version = "1.0.0", features = ["macros", "rt-multi-thread"] }
